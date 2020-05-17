@@ -47,7 +47,8 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
 @ComponentScan("com.codegym.Controller")
-@EnableJpaRepositories("com.codegym.Repository")
+@ComponentScan("com.codegym.model")
+//@EnableJpaRepositories("com.codegym.Repository")
 @EnableWebSecurity
 //@EnableAspectJAutoProxy
 public class WebAppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
@@ -61,11 +62,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         this.applicationContext = applicationContext;
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/JQuery/**")
-                .addResourceLocations("file:/home/vutienbka/Downloads/CustomerManageJPARepository/src/main/resources/JQuery/");
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/JQuery/**")
+//                .addResourceLocations("file:/home/vutienbka/Downloads/CustomerManageJPARepository/src/main/resources/JQuery/");
+//    }
 
     // ---------------------------------------------------------
     @Bean
@@ -101,7 +102,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         templateResolver.setSuffix(".html");
 
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        // templateResolver.setCharacterEncoding("UTF-8");
+        templateResolver.setCharacterEncoding("UTF-8");
 
         return templateResolver;
     }
@@ -126,9 +127,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/BlogProject");
+        dataSource.setUrl("Jdbc:mysql://52.187.177.166:3306/project1?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8");
         dataSource.setUsername("root");
-        dataSource.setPassword("123456");
+        dataSource.setPassword("Maiyeuem89");
 
         return dataSource;
     }
@@ -142,8 +143,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(dataSource());
-        emf.setPackagesToScan(new String[]{"com.codegym.Entity"});
+        emf.setDataSource(this.dataSource());
+        emf.setPackagesToScan(new String[]{"com.codegym.model"});
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         emf.setJpaVendorAdapter(vendorAdapter);
@@ -162,7 +163,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
 
     private Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }

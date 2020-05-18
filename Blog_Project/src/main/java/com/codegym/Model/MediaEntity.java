@@ -1,7 +1,7 @@
 package com.codegym.Model;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @Entity
 @Table(name = "media", schema = "project")

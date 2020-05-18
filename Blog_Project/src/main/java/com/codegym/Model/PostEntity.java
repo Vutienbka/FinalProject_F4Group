@@ -9,7 +9,7 @@ import java.util.List;
 public class PostEntity {
     @Id
     @Column(name = "id")
-    private long id;
+    private Long id;
     @Column(name = "title")
     private String title;
     @Column(name = "publishedStatus")
@@ -44,7 +44,7 @@ public class PostEntity {
         this.tagEntityList = tagEntityList;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

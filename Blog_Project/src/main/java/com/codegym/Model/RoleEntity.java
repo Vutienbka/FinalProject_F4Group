@@ -1,5 +1,7 @@
 package com.codegym.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class RoleEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return id;
     }
@@ -29,8 +32,8 @@ public class RoleEntity {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "roleId"),inverseJoinColumns = @JoinColumn(name="userId"))
+    @ManyToMany(mappedBy = "roleEntityList", fetch = FetchType.LAZY,cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JsonIgnore
     public List<UserEntity> getUserEntityList() {
         return userEntityList;
     }

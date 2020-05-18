@@ -3,12 +3,14 @@ package com.codegym.Model;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "post", schema = "project")
 public class PostEntity {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "title")
     private String title;
@@ -22,8 +24,8 @@ public class PostEntity {
     private Timestamp updatedAt;
     @Column(name = "content")
     private String content;
-    @OneToMany(mappedBy = "postByPostId")
-    private List<CommentEntity> commentsById;
+    @OneToMany(mappedBy = "postByPostId", fetch = FetchType.EAGER)
+    private Set<CommentEntity> commentsById;
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     private UserEntity userByUserId;
@@ -101,11 +103,11 @@ public class PostEntity {
     }
 
 
-    public List<CommentEntity> getCommentsById() {
+    public Set<CommentEntity> getCommentsById() {
         return commentsById;
     }
 
-    public void setCommentsById(List<CommentEntity> commentsById) {
+    public void setCommentsById(Set<CommentEntity> commentsById) {
         this.commentsById = commentsById;
     }
 

@@ -1,5 +1,7 @@
 package com.codegym.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -8,6 +10,7 @@ import java.sql.Timestamp;
 public class CommentEntity {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "createdAt")
     private Timestamp createdAt;
@@ -15,10 +18,11 @@ public class CommentEntity {
     private Timestamp updatedAt;
     @Column(name = "content")
     private String content;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     private UserEntity userByUserId;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "postId", referencedColumnName = "id", nullable = false)
     private PostEntity postByPostId;
     @ManyToOne

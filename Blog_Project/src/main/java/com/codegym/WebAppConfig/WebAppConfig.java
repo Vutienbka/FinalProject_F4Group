@@ -1,5 +1,12 @@
 package com.codegym.WebAppConfig;
 
+import com.codegym.repository.PostRepository;
+
+import com.codegym.repository.impl.PostRepositoryImpl;
+
+import com.codegym.service.PostService;
+
+import com.codegym.service.impl.PostServiceImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,10 +16,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -25,7 +30,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -46,8 +50,7 @@ import java.util.Properties;
 @EnableWebMvc
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-@ComponentScan("com.codegym.Controller")
-@ComponentScan("com.codegym.model")
+@ComponentScan("com.codegym")
 //@EnableJpaRepositories("com.codegym.Repository")
 @EnableWebSecurity
 //@EnableAspectJAutoProxy
@@ -61,6 +64,18 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+
+    //    Edit 18.05.2020
+    @Bean
+    public PostRepository blogRepository() {
+        return new PostRepositoryImpl();
+    }
+
+    @Bean
+    public PostService blogService() {
+        return new PostServiceImpl();
+    }
+
 
 //    @Override
 //    public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -127,9 +142,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("Jdbc:mysql://52.187.177.166:3306/project1?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8");
+        dataSource.setUrl("Jdbc:mysql://localhost:3306/blogtest?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8");
         dataSource.setUsername("root");
-        dataSource.setPassword("Maiyeuem89");
+        dataSource.setPassword("Dung1992");
 
         return dataSource;
     }
@@ -144,7 +159,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(this.dataSource());
-        emf.setPackagesToScan(new String[]{"com.codegym.model"});
+        emf.setPackagesToScan(new String[]{"com.codegym.Model"});
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         emf.setJpaVendorAdapter(vendorAdapter);
@@ -161,10 +176,10 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         return transactionManager;
     }
 
-    private Properties additionalProperties() {
+    Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }

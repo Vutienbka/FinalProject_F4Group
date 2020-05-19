@@ -1,8 +1,11 @@
 package com.codegym.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "project")
@@ -23,11 +26,12 @@ public class UserEntity {
     private List<PostEntity> postsById;
 
 
-    private List<RoleEntity> roleEntityList;
+    private Set<RoleEntity> roleEntityList;
     private List<PostLikeEntity> postLikesById;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return id;
     }
@@ -67,16 +71,19 @@ public class UserEntity {
     public String getLastName() {
         return lastName;
     }
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "userEntityList",cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    public List<RoleEntity> getRoleEntityList() {
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "userId"),inverseJoinColumns = @JoinColumn(name="roleId"))
+    public Set<RoleEntity> getRoleEntityList() {
         return roleEntityList;
     }
 
-    public void setRoleEntityList(List<RoleEntity> roleEntityList) {
+    public void setRoleEntityList(Set<RoleEntity> roleEntityList) {
         this.roleEntityList = roleEntityList;
     }
 
     @OneToMany(mappedBy = "userByUserId")
+    @JsonIgnore
     public List<PostEntity> getPostsById() {
         return postsById;
     }
@@ -133,8 +140,8 @@ public class UserEntity {
     public void setSrcAvatar(String srcAvatar) {
         this.srcAvatar = srcAvatar;
     }
-
     @OneToMany(mappedBy = "userByUserId")
+    @JsonIgnore
     public List<CommentEntity> getCommentsById() {
         return commentsById;
     }
@@ -144,6 +151,7 @@ public class UserEntity {
     }
 //
     @OneToMany(mappedBy = "userByUserId")
+    @JsonIgnore
     public List<MediaEntity> getMediaById() {
         return mediaById;
     }
@@ -154,6 +162,7 @@ public class UserEntity {
 
 
     @OneToMany(mappedBy = "userByUserId")
+    @JsonIgnore
     public List<PostLikeEntity> getPostLikesById() {
         return postLikesById;
     }

@@ -1,5 +1,18 @@
 package com.codegym.WebAppConfig;
 
+//<<<<<<< HEAD
+//
+//=======
+//import com.codegym.repository.PostRepository;
+//
+//import com.codegym.repository.impl.PostRepositoryImpl;
+//
+//import com.codegym.service.PostService;
+//
+//import com.codegym.service.impl.PostServiceImpl;
+//>>>>>>> 1bf85888c62d509e0284f92ba6d55a9faa3e29fb
+import com.codegym.Service.IUserService;
+import com.codegym.Service.impl.UserService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +22,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -25,7 +37,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -46,12 +57,11 @@ import java.util.Properties;
 @EnableWebMvc
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-@ComponentScan("com.codegym.Controller")
-@ComponentScan("com.codegym.model")
-//@EnableJpaRepositories("com.codegym.Repository")
+@ComponentScan(basePackages ="com.codegym")
+@EnableJpaRepositories("com.codegym.Repository")
 @EnableWebSecurity
-//@EnableAspectJAutoProxy
 public class WebAppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+
     ApplicationContext applicationContext;
 
     @Autowired
@@ -102,7 +112,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         templateResolver.setSuffix(".html");
 
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("UTF-8");
+         templateResolver.setCharacterEncoding("UTF-8");
 
         return templateResolver;
     }
@@ -143,8 +153,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(this.dataSource());
-        emf.setPackagesToScan(new String[]{"com.codegym.model"});
+        emf.setDataSource(dataSource());
+        emf.setPackagesToScan(new String[]{"com.codegym.Model"});
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         emf.setJpaVendorAdapter(vendorAdapter);
@@ -163,10 +173,13 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
 
     private Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+
         return properties;
     }
+
+    @Bean
+    public IUserService getUserService(){return new UserService(); }
 
 }

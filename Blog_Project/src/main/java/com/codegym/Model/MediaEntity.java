@@ -1,7 +1,7 @@
 package com.codegym.Model;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @Entity
 @Table(name = "media", schema = "project")
@@ -12,6 +12,7 @@ public class MediaEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return id;
     }

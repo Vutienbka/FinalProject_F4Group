@@ -1,6 +1,18 @@
 package com.codegym.WebAppConfig;
 
-
+//<<<<<<< HEAD
+//
+//=======
+//import com.codegym.repository.PostRepository;
+//
+//import com.codegym.repository.impl.PostRepositoryImpl;
+//
+//import com.codegym.service.PostService;
+//
+//import com.codegym.service.impl.PostServiceImpl;
+//>>>>>>> 1bf85888c62d509e0284f92ba6d55a9faa3e29fb
+import com.codegym.Service.IUserService;
+import com.codegym.Service.impl.UserService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +24,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -44,11 +57,11 @@ import java.util.Properties;
 @EnableWebMvc
 @EnableTransactionManagement
 @EnableSpringDataWebSupport
-@ComponentScan("com.codegym")
-//@EnableJpaRepositories("com.codegym.Repository")
+@ComponentScan(basePackages ="com.codegym")
+@EnableJpaRepositories("com.codegym.Repository")
 @EnableWebSecurity
-//@EnableAspectJAutoProxy
 public class WebAppConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+
     ApplicationContext applicationContext;
 
     @Autowired
@@ -58,18 +71,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-
-    //    Edit 18.05.2020
-//    @Bean
-//    public PostRepository blogRepository() {
-//        return new PostRepositoryImpl();
-//    }
-//
-//    @Bean
-//    public PostService blogService() {
-//        return new PostServiceImpl();
-//    }
-
 
 //    @Override
 //    public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -111,7 +112,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         templateResolver.setSuffix(".html");
 
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("UTF-8");
+         templateResolver.setCharacterEncoding("UTF-8");
 
         return templateResolver;
     }
@@ -136,9 +137,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("Jdbc:mysql://localhost:3306/blogtest?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8");
+        dataSource.setUrl("Jdbc:mysql://52.187.177.166:3306/project1?serverTimezone=UTC&useUnicode=yes&characterEncoding=UTF-8");
         dataSource.setUsername("root");
-        dataSource.setPassword("Dung1992");
+        dataSource.setPassword("Maiyeuem89");
 
         return dataSource;
     }
@@ -152,7 +153,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(this.dataSource());
+        emf.setDataSource(dataSource());
         emf.setPackagesToScan(new String[]{"com.codegym.Model"});
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -170,12 +171,15 @@ public class WebAppConfig extends WebMvcConfigurerAdapter implements Application
         return transactionManager;
     }
 
-    Properties additionalProperties() {
+    private Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+
         return properties;
     }
+
+    @Bean
+    public IUserService getUserService(){return new UserService(); }
 
 }

@@ -7,4 +7,8 @@ import java.util.List;
 public interface IUserService {
     List<UserEntity> findAll();
 
+    void delete(Long id);
+
+    void save(UserEntity userEntity);
+
 }
